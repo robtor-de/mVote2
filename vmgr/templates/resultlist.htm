@@ -1,0 +1,16 @@
+{% for element in songstoplay %}
+  {{ element.song_title }}<br>
+  {{ element.song_artist}}<br>
+  {{ element.votes }}<br>
+  <a href="/completevote--{{ element.pk }}/">Abgespielt markieren</a><br>
+  <br>
+{% endfor %}
+<hr>
+{% for element in songstomanage %}
+  {{ element.song_title }}<br>
+  {{ element.song_artist }}<br>
+  {{ element.votes }}<br>
+  <a href="/acceptvote--{{ element.pk }}/">Akzeptieren</a><br>
+  <a href="/completevote--{{ element.pk }}/">Entfernen</a><br>
+  <br>
+{% endfor %}

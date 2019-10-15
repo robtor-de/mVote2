@@ -1,7 +1,28 @@
-{% for element in active %}
-  {{ element.song_title }}<br>
-  {{ element.song_artist}}<br>
-  {{ element.votes }}<br>
-  <a href="/countvote--{{ element.pk }}/">Abstimmen</a><br>
-  <hr>
+{% extends 'base.htm' %}
+
+{% block content %}
+{% for element in votable %}
+  <div class="card">
+    <div class="card-header bg-primary"></div>
+    <div class="card-body">
+      <h5 class="card-title>">{{ element.song_title }}</h5>
+      <p class="card-text">{{ element.song_artist }}</p>
+      <a class="btn btn-primary" href="/countvote--{{ element.pk }}/">Abstimmen <span class="badge badge-light">{{ element.votes }}</span></a><br>
+    </div>
+  </div>
 {% endfor %}
+
+
+{% endblock %}
+<hr>
+{% for element in waiting %}
+  {{ element.song_title }}<br>
+  {{ element.song_artist }}<br>
+  {{ element.votes }}<br>
+{% endfor %}
+<hr><hr>
+<tt>
+{% for element in completed %}
+  {{ element.song_title }} {{ element.song_artist }}
+{% endfor %}
+</tt>

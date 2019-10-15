@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="/static/css/bootstrap.css">
+  <title>{% block title %}Musikabstimmung{% endblock %}</title>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">mVote2</a>
+  </nav>
+
+  <div class="container">
+    {% block content %}Dummy Content{% endblock %}
+  </div>
+
+  <div class="fluid-container">
+    <ul class="nav">
+      <li class="nav-item">
+        <a class="nav-link active" href="/vote/">Abstimmen</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/pub/">Einreichen</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-secondary" href="https://github.com/robtor-de/">Entwickler</a>
+      </li>
+    </ul>
+  </div>
+
+
+
+
+<script src="/static/js/bootrstrap.js"></script>
+</body>
+</html>

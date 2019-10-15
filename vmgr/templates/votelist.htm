@@ -1,0 +1,7 @@
+{% for element in active %}
+  {{ element.song_title }}<br>
+  {{ element.song_artist}}<br>
+  {{ element.votes }}<br>
+  <a href="/countvote--{{ element.pk }}/">Abstimmen</a><br>
+  <hr>
+{% endfor %}

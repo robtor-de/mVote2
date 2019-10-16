@@ -5,6 +5,9 @@ from vmgr.models import SongRequest, Voice
 from django.db.models import Value
 import math
 
+def start(request):
+    return HttpResponseRedirect('/vote/')
+
 def publish_song(request):
 
     if request.method == 'POST':
@@ -12,9 +15,11 @@ def publish_song(request):
 
         if form.is_valid():
             form.save()
-            return HttpResponse("ok")
+            return HttpResponseRedirect("/vote/")
     else:
         form = PublishForm()
+        form.fields['song_title'].widget.attrs.update({'class': 'form-control'})
+        form.fields['song_artist'].widget.attrs.update({'class': 'form-control'})
         return render(request, "publish_song.htm", {'form' : form})
 
 
@@ -35,7 +40,10 @@ def vote(request):
         cvotes += element.voice_set.all().count()
 
     for element in votable:
-        percentage.append(math.floor((element.voice_set.all().count()/cvotes)*100))
+        try:
+            percentage.append(math.floor((element.voice_set.all().count()/cvotes)*100))
+        except:
+            percentage.append(0)
         songs.append(element)
         if element.voice_set.filter(skey=request.session.session_key).exists():
             status.append(True)

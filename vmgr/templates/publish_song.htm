@@ -1,5 +1,11 @@
-<form action="/pub/" method="post">
+{% extends 'base.htm' %}
+
+{% block content %}
+<form action="/pub/" method="post" class="m-3">
   {% csrf_token %}
-{{ form }}
-<input type="submit" value="Absenden">
+  <div class="form-group">
+    {{ form }}
+  </div>
+  <input type="submit" value="Absenden" class="btn btn-primary">
 </form>
+{% endblock %}

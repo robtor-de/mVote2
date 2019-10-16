@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from vmgr.forms import PublishForm
 from django.http import HttpResponse, HttpResponseRedirect
-from vmgr.models import SongRequest
+from vmgr.models import SongRequest, Voice
+from django.db.models import Value
+import math
 
 def publish_song(request):
 
@@ -18,9 +20,29 @@ def publish_song(request):
 
 #Show complete list with votable Songs and already accepted enqued songs
 def vote(request):
+    if not request.session.session_key:
+        request.session.save()
+
     #retrieve a list of votable songs
-    votable = SongRequest.objects.filter(completed=False, accepted=False).order_by('votes')
-    com_pks = request.session.keys()
+    votable = SongRequest.objects.filter(completed=False, accepted=False).order_by(Value('votes').desc())
+
+    songs = []
+    status = []
+    percentage = []
+
+    cvotes = 0
+    for element in votable:
+        cvotes += element.voice_set.all().count()
+
+    for element in votable:
+        percentage.append(math.floor((element.voice_set.all().count()/cvotes)*100))
+        songs.append(element)
+        if element.voice_set.filter(skey=request.session.session_key).exists():
+            status.append(True)
+        else:
+            status.append(False)
+
+    vlist = zip(songs, status, percentage)
 
     #retrieve a list of already accepted not removed Songs
     waiting = SongRequest.objects.filter(completed=False, accepted=True)
@@ -29,25 +51,32 @@ def vote(request):
     completed = SongRequest.objects.filter(completed=True)
 
 
-    return render(request, "votelist.htm", {'votable': votable, 'waiting': waiting, 'completed': completed})
+    return render(request, "votelist.htm", {'vlist': vlist, 'waiting': waiting, 'completed': completed})
 
 def countvote(request, pkey=0):
+    if not request.session.session_key:
+        request.session.save()
+
+
     if pkey != 0:
-        vmodel = SongRequest.objects.get(pk=pkey)
 
-        if(pkey not in request.session):
-            request.session[pkey] = False
+        try:
+            vmodel = SongRequest.objects.get(pk=pkey)
 
-        if vmodel.completed == False and request.session[pkey] == False:
-            vmodel.votes = vmodel.votes + 1
-            vmodel.save()
+            if(vmodel.voice_set.filter(skey=request.session.session_key).exists()):
+                return HttpResponse("Schon abgestimmt")
+            else:
+                try:
+                    voice = Voice(songrequest=vmodel, skey=request.session.session_key)
+                    voice.save()
+                except:
+                    return HttpResponse("Fehler beim Speichern der Stimme")
+                vmodel.votes = vmodel.votes + 1
+                vmodel.save()
+                return HttpResponseRedirect("/vote/")
+        except:
+            return HttpResponse("Fehler, angefragter SongRequest existiert nicht")
 
-            request.session[pkey] = True
-            return HttpResponseRedirect("/vote")
-        elif request.session[pkey] == True:
-            return HttpResponse("Schon abgestimmt")
-        else:
-            return HttpResponse("Nicht mehr aktiv")
     else:
         return HttpResponse("Fehler")
 

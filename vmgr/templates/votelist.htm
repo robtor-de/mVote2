@@ -1,28 +1,47 @@
 {% extends 'base.htm' %}
 
 {% block content %}
-{% for element in votable %}
-  <div class="card">
-    <div class="card-header bg-primary"></div>
+{% for element, status, percentage in vlist %}
+  <div class="card pb-2 mb-4">
+    <div class="card-header bg-primary">
+      <div class="progress" style="height: 5px;">
+        <div class="progress-bar bg-danger" role="progressbar" style="width: {{ percentage }}%;" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+    </div>
     <div class="card-body">
       <h5 class="card-title>">{{ element.song_title }}</h5>
       <p class="card-text">{{ element.song_artist }}</p>
-      <a class="btn btn-primary" href="/countvote--{{ element.pk }}/">Abstimmen <span class="badge badge-light">{{ element.votes }}</span></a><br>
+      <a class="btn btn-primary {% if status %}disabled btn-secondary{% endif %}" href="/countvote--{{ element.pk }}/">Abstimmen <span class="badge badge-light">{{ element.votes }}</span></a><br>
     </div>
   </div>
 {% endfor %}
-
-
-{% endblock %}
 <hr>
-{% for element in waiting %}
-  {{ element.song_title }}<br>
-  {{ element.song_artist }}<br>
-  {{ element.votes }}<br>
-{% endfor %}
-<hr><hr>
-<tt>
-{% for element in completed %}
-  {{ element.song_title }} {{ element.song_artist }}
-{% endfor %}
-</tt>
+<h5 class="text-success mb-2 mt-5">Warteschlange</h5>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Titel</th>
+      <th scope="col">Künstler</th>
+      <th scope="col">Stimmen</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for element in waiting %}
+      <tr>
+        <th scope="col">{{ element.song_title }}</td>
+        <td>{{ element.song_artist }}</td>
+        <td>{{ element.votes }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<hr>
+<div class="container mt-5">
+  <h5 class="text-secondary">Verlauf:</h5>
+  <ul>
+    {% for element in completed %}
+    <li>{{ element.song_title }} - {{ element.song_artist}} - {{ element.votes }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

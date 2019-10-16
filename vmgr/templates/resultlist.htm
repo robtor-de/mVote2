@@ -1,16 +1,59 @@
-{% for element in songstoplay %}
-  {{ element.song_title }}<br>
-  {{ element.song_artist}}<br>
-  {{ element.votes }}<br>
-  <a href="/completevote--{{ element.pk }}/">Abgespielt markieren</a><br>
-  <br>
-{% endfor %}
+{% extends 'base.htm' %}
+
+{% block content %}
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Stimmen</th>
+      <th scope="col">Titel</th>
+      <th scope="col">Künstler</th>
+      <th scope="col">Aktion</th>
+    <tr>
+  </thead>
+  <tbody>
+    {% for element in songstoplay %}
+      <tr>
+        <th scope="row">{{ element.votes }}</th>
+        <td>{{ element.song_title }}</td>
+        <td>{{ element.song_artist}}</td>
+        <td><a class="btn btn-sm btn-success" href="/completevote--{{ element.pk }}/">Abgespielt</a></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<hr>
+<table class="table">
+  <thead class="thead">
+    <tr>
+      <th scope="col">Stimmen</th>
+      <th scope="col">Titel</th>
+      <th scope="col">Künstler</th>
+      <th scope="col">Aktion</th>
+    <tr>
+  </thead>
+  <tbody>
+    {% for element in songstomanage %}
+      <tr>
+        <th scope="row">{{ element.votes }}</th>
+        <td>{{ element.song_title }}</td>
+        <td>{{ element.song_artist}}</td>
+        <td>
+          <a class="btn btn-sm btn-success" href="/acceptvote--{{ element.pk }}/">Akzeptieren</a>
+          <a class="btn btn-sm btn-danger" href="/completevote--{{ element.pk }}/">Entfernen</a>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+
 <hr>
 {% for element in songstomanage %}
   {{ element.song_title }}<br>
   {{ element.song_artist }}<br>
   {{ element.votes }}<br>
-  <a href="/acceptvote--{{ element.pk }}/">Akzeptieren</a><br>
+
   <a href="/completevote--{{ element.pk }}/">Entfernen</a><br>
   <br>
 {% endfor %}

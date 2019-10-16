@@ -6,3 +6,7 @@ class SongRequest(models.Model):
     votes = models.IntegerField(default=0)
     completed = models.BooleanField(default=False)
     accepted = models.BooleanField(default=False)
+
+class Voice(models.Model):
+    songrequest = models.ForeignKey(SongRequest)
+    skey = models.CharField(max_length=40, default=0)

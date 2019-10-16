@@ -6,7 +6,11 @@ from django.db.models import Value
 import math
 
 def start(request):
-    return HttpResponseRedirect('/vote/')
+    if request.session.get("intro", False):
+        return HttpResponseRedirect("/vote/")
+    else:
+        request.session["intro"] = True
+        return render(request, "start.htm")
 
 def publish_song(request):
 

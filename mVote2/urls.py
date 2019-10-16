@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'^voteresults/', views.results),
     url(r'^completevote--(?P<pkey>[0-9]+)/$', views.completevote),
     url(r'^acceptvote--(?P<pkey>[0-9]+)/$', views.acceptvote),
+    url(r'', views.start),
 ]
